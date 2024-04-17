@@ -1,5 +1,5 @@
 # Stock-Predictor-Full-Stack-Project
-To develop an LSTM-based stock value predictor and deploy it to the cloud
+To develop an LSTM-based stock value predictor and deploy it to the cloud.
 
 # Project Overview
 The objective of this project is to develop an LSTM-based stock value predictor and deploy it to the cloud. This deployment will enable users to access the predictor for free, allowing them to integrate it into their trading strategies.
