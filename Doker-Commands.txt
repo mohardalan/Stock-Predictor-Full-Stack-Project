@@ -1,0 +1,257 @@
+
+#############################################################
+#  Create Virtual Environment: 
+
+# Creating a Virtual Environment
+python -m venv stock-venv
+
+# change the execution policy temporarily to allow script execution
+Set-ExecutionPolicy RemoteSigned -Scope Process
+
+# Activate the virtual environment 
+.\stock-venv\Scripts\activate
+
+# Deactive the virtual environment
+deactivate
+
+#############################################################
+#  Installing necessary libraries in stock-venv 
+
+pip install --upgrade pip
+pip install numpy
+pip install matplotlib
+pip install pandas
+pip install -U scikit-learn
+pip install yfinance
+pip install datetime
+#pip install flask==2.2.5
+pip install --no-cache-dir flask==2.2.5
+## pip install tensorflow
+
+
+#############################################################
+# Check the model by using Flask 
+
+set FLASK_APP=app
+flask run
+
+#############################################################
+# Creating requirements.txt
+
+pip freeze -l > requirements.txt
+
+#############################################################
+# Dockerfile
+Create a Dockerfile: Create a new file named Dockerfile (without any file extension) in the root directory of your project. Paste the following contents into the Dockerfile:
+
+FROM python:3.8.10
+ADD . /app
+WORKDIR /app
+RUN pip install -r requirements.txt
+ENTRYPOINT ["python"]
+CMD ["app.py"]
+
+
+#############################################################
+## Install Docker: (Optional) - Good to have access to docker images
+If you haven't already installed Docker, you can download and install it from the official Docker website.
+
+https://www.docker.com/products/docker-desktop/
+
+
+#############################################################
+## Install the Docker extension for VS Code: (Necessary)
+Open VS Code, go to the Extensions view by clicking on the Extensions icon in the Activity Bar on the side of the window, and search for "Docker". Install the "Docker" extension by Microsoft.
+
+docker --version
+
+# to Check the version of Docker on IDE 
+
+#############################################################
+## Create a file (named ".dockerignore") for the files that should be ignored in creating docker image  
+
+put the name of all files you ned to be ignored in the ".dockerignore" file :
+
+.ipynb_checkpoints
+__pycache__
+Old
+stock-venv
+Collecting-Last-60-Stock-Vlaues.ipynb
+Doker-Commands.txt
+Flask-Commands.txt
+LSTM-Evaluation-Model-1.ipynb
+LSTM-Evaluation-Model-2.ipynb
+LSTM-Evaluation-Model-3.ipynb
+
+
+#############################################################
+## Build the Docker image: 
+Open a terminal (Docker CLI or Docker-enabled terminal) and navigate to the directory containing your Dockerfile. Run the following command to build the Docker image:
+
+docker build -t stock-predict:3.0 .
+
+Replace "stock-predict" with a suitable name for your Docker image.
+The "3.0" is the version of your docker image and should be change in evry run of this command.
+
+## To check the active docker images 
+
+docker images
+
+
+#############################################################
+
+## Run the Docker container: 
+
+Once the image is built, you can run a Docker container based on that image. Run the following command:
+
+docker run --name stock-predictor -p 5000:5000 stock-predict:3.0
+
+OR
+
+docker run -p 5000:5000 stock-predict:1.0
+
+OR 
+
+docker run -it --rm stock-predict:1.0
+
+OR 
+
+docker run -it -p 5000:5000 --rm stock-predict:3.0
+
+This command runs the Docker container in interactive mode (-it), removes the container automatically after it stops (--rm), and uses the image named "stock-predict:1.0".
+
+
+#############################################################
+## To View docker containers
+
+docker ps
+
+#############################################################
+# Creating a new Dockerfile - Solving TensorFolw Errors
+
+# Use the official TensorFlow Docker image as the base image
+FROM tensorflow/tensorflow:latest
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the current directory contents into the container at /app
+COPY . /app
+
+# Install the required libraries from requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Expose the Flask port
+EXPOSE 5000
+
+# Command to run the Flask application
+CMD ["python", "app.py"]
+
+
+
+#############################################################
+# Push the image to the Dockerhub
+
+# Login to DockerHub
+docker login
+
+# Tag the docker image with Dockerhub
+docker tag stock-predict:3.0 mohardalan/stock-predict:3.0
+
+# Push the tagged docker image
+docker push mohardalan/stock-predict:3.0
+
+## Pushed image name = mohardalan/stock-predict
+
+
+#############################################################
+
+## Machine Info -1 
+
+Name: my-vm-instance-1
+
+External IP address: 34.125.137.110
+
+OS: debian-12-bookworm-v20240312
+
+
+Firewall rule tag: stock-pred-tag-1
+
+#############################################################
+## Installing Docker on VM 
+
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+
+
+# To install the latest version, run:
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+
+## Verify that the installation is successful by running the hello-world image:
+sudo docker run hello-world
+
+
+#############################################################
+
+## Pulling a docker image
+sudo docker pull mohardalan/stock-predict:3.0
+
+
+# View docker image
+sudo docker images
+
+## Running a docker container
+sudo docker run -d --restart on-failure -p 5000:5000 mohardalan/stock-predict:3.0
+
+# View docker containers
+sudo docker ps
+
+Notes: 
+CONTAINER ID   IMAGE                          COMMAND           CREATED          STATUS         PORTS                                       NAMES
+abd440014dae   mohardalan/stock-predict:3.0   "python app.py"   10 seconds ago   Up 8 seconds   0.0.0.0:5000->5000/tcp, :::5000->5000/tcp   angry_roentgen
+
+
+# URL: 
+http://34.125.137.110:5000/
+
+
+#############################################################
+
+## Machine Info -2 
+
+Name: my-vm-instance-2
+
+External IP address: 34.125.137.110
+
+OS: debian-12-bookworm-v20240312
+
+
+Firewall rule tag: stock-pred-tag-1
+
+
+#############################################################
+
+
+
+
+
+
+
+
+
+
+
+
+

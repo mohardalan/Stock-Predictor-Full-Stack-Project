@@ -1,0 +1,10 @@
+https://flask.palletsprojects.com/en/2.0.x/quickstart/#a-minimal-application
+####################################
+
+set FLASK_APP=app
+set FLASK_ENV=development
+set FLASK_DEBUG=1
+flask run
+
+####################################
+

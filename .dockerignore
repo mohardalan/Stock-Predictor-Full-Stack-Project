@@ -1,0 +1,10 @@
+.ipynb_checkpoints
+__pycache__
+Old
+stock-venv
+Collecting-Last-60-Stock-Vlaues.ipynb
+Doker-Commands.txt
+Flask-Commands.txt
+LSTM-Evaluation-Model-1.ipynb
+LSTM-Evaluation-Model-2.ipynb
+LSTM-Evaluation-Model-3.ipynb
